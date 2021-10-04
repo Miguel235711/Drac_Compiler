@@ -6,4 +6,7 @@
 main() {
     prints("hello, world\n");
     return 42;
-}
+}'\uAAAAFf''Z'
+"afadf\uaaaaaa"
+"aa  "
+''

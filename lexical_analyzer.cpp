@@ -6,10 +6,23 @@ LexicalAnalyzer::LexicalAnalyzer(){
 LexicalAnalyzer::~LexicalAnalyzer(){
 
 }
-bool LexicalAnalyzer::handle_char(char c,std::vector<std::pair<int,std::string> > & tokens,std::string & token,std::ifstream & in){
+int LexicalAnalyzer::get_line(){
+    return line;
+}
+int LexicalAnalyzer::get_column(){
+    return col;
+}
+bool LexicalAnalyzer::handle_char(char c,std::vector<std::pair<int,std::string> > & tokens,std::ifstream & in){
+    if(c=='\n'||c=='\r')
+        line++,l_col=col,col=0;
+    else 
+        col++;
     if(automata.next(c))
         token.push_back(c);
     else{
+        in.unget();
+        if(c=='\n'||c=='\r')
+            line--,col=l_col;
         if(automata.in_token()){
             //token found
             int label = automata.get_token_label();
@@ -17,26 +30,30 @@ bool LexicalAnalyzer::handle_char(char c,std::vector<std::pair<int,std::string> 
                 tokens.push_back({label,token});
             automata.restart();
         }else{
+            if(!isspace(c))
+                token.push_back(c);
             automata.restart();
             return false; // error
         }
-        in.unget();
         token="";
     }
     return true;
 }
 bool LexicalAnalyzer::get_tokens(const std::string & in_file_name,std::vector<std::pair<int,std::string> > & tokens){
     std::ifstream in(in_file_name);
+    line=1;
     char c;
     tokens.clear();
-    std::string token;
     while(in.get(c)){
         //std::cout << "c: " << c << "\n";
-        if(!handle_char(c,tokens,token,in))
+        if(!handle_char(c,tokens,in))
             return false;
     }
     //for last token
-    if(!handle_char('\n',tokens,token,in))
+    if(!handle_char('\n',tokens,in))
         return false;
     return true;
+}
+std::string LexicalAnalyzer::get_last_token(){
+    return token;
 }

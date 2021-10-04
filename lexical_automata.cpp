@@ -6,10 +6,17 @@ LexicalAutomata::LexicalAutomata(){
         adhoc_node = new Node();
     cur = adhoc_nodes[0];
 
-    add_range('a','z',letter_chars);
-    add_range('A','Z',letter_chars);
+    add_range('a','f',letter_chars);
+    add_range('A','F',letter_chars);
+
+    hex_chars = letter_chars;
+
+    add_range('g','z',letter_chars);
+    add_range('G','Z',letter_chars);
 
     add_range('0','9',number_chars);
+
+    copy(number_chars.begin(),number_chars.end(),back_inserter(hex_chars));
 
     identifer_chars = letter_chars;
     copy(number_chars.begin(),number_chars.end(),back_inserter(identifer_chars));
@@ -67,18 +74,67 @@ void LexicalAutomata::add_adhoc_nodes(){
     add_specific(_7_ch,adhoc_nodes[7],number_chars);
     //8
     auto & _8_ch = adhoc_nodes[8]->children;
-    _8_ch['\'']=adhoc_nodes[9];
-    set_all_but(adhoc_nodes[8],adhoc_nodes[8],{'\''});
+    _8_ch['\\']=adhoc_nodes[13];
+    set_all_but(adhoc_nodes[8],adhoc_nodes[20],{'\'','\n','\r','\t','"'});
     //9
     adhoc_nodes[9]->label=3;
     //10
     auto & _10_ch = adhoc_nodes[10]->children;
     _10_ch['"']=adhoc_nodes[11];
-    set_all_but(adhoc_nodes[10],adhoc_nodes[10],{'"'});
+    _10_ch['\\']=adhoc_nodes[21];
+    set_all_but(adhoc_nodes[10],adhoc_nodes[10],{'\'','\n','\r','\t','"'});
     //11
     adhoc_nodes[11]->label=4;
     //12
     adhoc_nodes[12]->label=0;
+    //13
+    auto & _13_ch = adhoc_nodes[13]->children;
+    _13_ch['u']=adhoc_nodes[14];
+    add_specific(_13_ch,adhoc_nodes[20],{'n','r','t','\\','\'','"'});
+    //14
+    auto & _14_ch = adhoc_nodes[14]->children;
+    add_specific(_14_ch,adhoc_nodes[15],hex_chars);
+    //15
+    auto & _15_ch = adhoc_nodes[15]->children;
+    add_specific(_15_ch,adhoc_nodes[16],hex_chars);
+    //16
+    auto & _16_ch = adhoc_nodes[16]->children;
+    add_specific(_16_ch,adhoc_nodes[17],hex_chars);
+    //17
+    auto & _17_ch = adhoc_nodes[17]->children;
+    add_specific(_17_ch,adhoc_nodes[18],hex_chars);
+    //18
+    auto & _18_ch = adhoc_nodes[18]->children;
+    add_specific(_18_ch,adhoc_nodes[19],hex_chars);
+    //19
+    auto & _19_ch = adhoc_nodes[19]->children;
+    add_specific(_19_ch,adhoc_nodes[20],hex_chars);
+    //20
+    auto & _20_ch = adhoc_nodes[20]->children;
+    _20_ch['\'']=adhoc_nodes[9];
+    //21
+    auto & _21_ch = adhoc_nodes[21]->children;
+    _21_ch['u'] = adhoc_nodes[22];
+    add_specific(_21_ch,adhoc_nodes[10],{'n','r','t','\\','\'','"'});
+    //22
+    auto & _22_ch = adhoc_nodes[22]->children;
+    add_specific(_22_ch,adhoc_nodes[23],hex_chars);
+    //23
+    auto & _23_ch = adhoc_nodes[23]->children;
+    add_specific(_23_ch,adhoc_nodes[24],hex_chars);
+    //24
+    auto & _24_ch = adhoc_nodes[24]->children;
+    add_specific(_24_ch,adhoc_nodes[25],hex_chars);
+    //25
+    auto & _25_ch = adhoc_nodes[25]->children;
+    add_specific(_25_ch,adhoc_nodes[26],hex_chars);
+    //26
+    auto & _26_ch = adhoc_nodes[26]->children;
+    add_specific(_26_ch,adhoc_nodes[27],hex_chars);
+    //27
+    auto & _27_ch = adhoc_nodes[27]->children;
+    add_specific(_27_ch,adhoc_nodes[10],hex_chars);
+    
 }
 void LexicalAutomata::set_all_but(Node * from,Node * to, std::unordered_set<char> but){
     //dangerous!!

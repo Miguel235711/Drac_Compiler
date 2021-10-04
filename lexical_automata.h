@@ -39,7 +39,7 @@ class LexicalAutomata{
         Node * cur;
         int openQuotation = 0;
         void add_to_trie(std::string token,int label);
-        std::vector<Node*> adhoc_nodes = std::vector<Node*>(13);
+        std::vector<Node*> adhoc_nodes = std::vector<Node*>(28);
         void add_adhoc_nodes();
         void set_all_but(Node * from ,Node * to, std::unordered_set<char> but);
         void add_specific(std::unordered_map<char,Node *> & children,Node * to, std::vector<char> which);
@@ -50,7 +50,8 @@ class LexicalAutomata{
             ,number_chars
             ,letter_chars
             ,escaped_identifier_chars={'t','b','r','n','\'','"','\\','$'}
-            ,ignore_chars={' ','\t','\n'};
+            ,ignore_chars={' ','\t','\n'}
+            ,hex_chars;
 };
 
 #endif // LEXICAL_AUTOMATA_H
