@@ -56,19 +56,19 @@ int main(int argc,char ** argv){
                 }
             }
         }else{
-            std::cout << "Error getting testing directory\n";
+            f_out("Error getting testing directory\n");
             return EXIT_FAILURE;
         }
     }
     for(auto file_name: filenames){
         std::vector<std::pair<int,std::string> > tokens;
         if(!lexical_analyzer.get_tokens(file_name,tokens)){
-            std::cout << lexical_analyzer.get_line() << ':' << lexical_analyzer.get_column() << " Token " << lexical_analyzer.get_last_token() << " is not valid\n";
+            f_out(std::to_string(lexical_analyzer.get_line())+":"+std::to_string(lexical_analyzer.get_column())+" Token "+lexical_analyzer.get_last_token()+" is not valid\n");
             return EXIT_FAILURE;
         }
-        std::cout << file_name << "\n";
+        f_out(file_name+"\n");
         for(auto token: tokens)
-            std::cout << "label: " << token.first << " content: " << token.second << "\n";
+            f_out("label: "+std::to_string(token.first)+" content: "+token.second+"\n");
     }
     out.close();
     return 0;
