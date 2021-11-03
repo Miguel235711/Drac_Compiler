@@ -9,7 +9,7 @@ Grammar State::grammar("drac grammar.txt");
 int main(){
     
     //create states
-    State * root = new State();
+    State * root = new State(NULL);
     
     return 0;
 }

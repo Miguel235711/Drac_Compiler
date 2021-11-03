@@ -3,6 +3,7 @@
 
 #include "grammar.h"
 #include "production_rule.h"
+#include "production_rule_lr1.h"
 
 
 #include <string>
@@ -24,7 +25,9 @@ class Grammar{
     public:
         Grammar(const std::string grammar_specification_input_file_name);
         virtual ~Grammar();
-        
+        vector<ProductionRuleLR1> get_closure(ProductionRuleLR1 & first_production_rule_for_state);
+        vector<ProductionRuleLR1> get_closure_zero();
+        int get_right_symbol_from_ith_rule(int pointer,int i);
     private:
         std::vector<ProductionRule> rules;
         std::string input_file_name /*= "drac grammar.txt"*/ /*"test_grammar_0.txt"*/;
@@ -36,7 +39,9 @@ class Grammar{
             left_non_terminal_info(){}
         };
         void get_reachable(int left_symbol,std::unordered_set<int> & visited);
+        void dfs_get_closure(int left_symbol,std::unordered_set<int> & visited,std::vector<ProductionRuleLR1> & closure_rules);
         std::unordered_map<int,left_non_terminal_info> to_left_non_terminal_info;
+
 };
 
 #endif // GRAMMAR_H

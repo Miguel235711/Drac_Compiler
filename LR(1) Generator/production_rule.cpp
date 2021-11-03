@@ -15,6 +15,10 @@ int ProductionRule::get_first_right_symbol(){
     assert(!right_symbols.empty());
     return right_symbols[0];
 }
+int ProductionRule::get_ith_right_symbol(int i){
+    assert(i < right_symbols.size());
+    return right_symbols[i];
+}
 int ProductionRule::get_left_non_terminal(){
     return left_non_terminal;
 }

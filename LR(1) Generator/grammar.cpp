@@ -69,3 +69,40 @@ void Grammar::load_rules(){
         rules.push_back(rule);
     }
 }
+
+void Grammar::dfs_get_closure(int left_symbol,std::unordered_set<int> & visited,std::vector<ProductionRuleLR1> & closure_rules){
+    ///check if visited
+    if(visited.find(left_symbol)!=visited.end())
+        return;
+    visited.insert(left_symbol);
+    ///add rules belonging to this symbol
+    auto & to_left_non_terminal_info_things = to_left_non_terminal_info[left_symbol];
+    for(auto rule_index : to_left_non_terminal_info_things.to_rule_index)
+        closure_rules.push_back(ProductionLR1(rule_index,0,))
+    for(auto child_left_symbol: to_left_non_terminal_info_things.children)
+        dfs_get_closure(child_left_symbol,visited,closure_rules);
+    }
+}
+
+std::vector<ProductionRuleLR1> Grammar::get_closures(std::vector<ProductionRuleLR1> & productions_rules_for_state){
+    std::unordered_set<int> visited;
+    //precalculate look_aheads for right_pointer_symbol
+    ///TODO
+    ///for each base productions_rules_for_state
+    for(int i = 0 ; i < productions_rule_for_state.size() ; i ++){
+        auto & production_rule_for_state = productions_rule_for_state[i]; 
+        dfs_get_closure(production_rule_for_state.get_right_pointer_symbol(),visited,productions_rule_for_state);
+    }
+    return closure_rules;
+}
+
+std::vector<ProductionRuleLR1> Grammar::get_closure_zero(){
+    std::vector<ProductionRuleLR1> closure_zero = {ProductionLR1(0,0,{40})};
+    return get_closures(closure_zero);
+}
+
+int Grammar::get_right_symbol_from_ith_rule(int pointer,int i){
+    assert(i < rules.size());
+    assert(pointer < rules[i].size());
+    return rules[i][pointer];
+}

@@ -23,7 +23,7 @@
 
 class State{
     public:
-        State();
+        State(State * parent_state);
         virtual ~State();
         static int st_label_counter;
         static Grammar grammar;

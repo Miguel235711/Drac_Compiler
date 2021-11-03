@@ -23,6 +23,7 @@ class ProductionRule{
         void add_right_symbol(int symbol);
         int get_first_right_symbol();
         int get_left_non_terminal();
+        int get_ith_right_symbol(int i);
     private:
         int left_non_terminal;
         std::vector<int> right_symbols;
