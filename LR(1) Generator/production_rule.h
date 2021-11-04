@@ -24,9 +24,12 @@ class ProductionRule{
         int get_first_right_symbol();
         int get_left_non_terminal();
         int get_ith_right_symbol(int i);
+        int get_hash();
+        static int hash_symbol_count,hash_modulo,min_symbol_value;
     private:
         int left_non_terminal;
         std::vector<int> right_symbols;
+        int normalize_symbol_for_hash(int symbol);
 };
 
 #endif // PRODUCTION_RULE_H

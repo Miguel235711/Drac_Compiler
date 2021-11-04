@@ -19,11 +19,18 @@
 
 class ProductionRuleLR1{
     public:
-        ProductionRuleLR1(int rule_index,int pointer,std::unordered_set<int> & look_aheads);
+        ProductionRuleLR1(int rule_index,int pointer,int look_aheads_index);
         virtual ~ProductionRuleLR1();
         int get_right_pointer_symbol();
+        int get_right_symbol_from_ith_rule(int pointer_offset);
+        int get_left_symbol();
+        int get_rule_index();
+        int get_hash();
+        bool is_there_symbol_at(int pointer_offset);
+        void advance_pointer();
+        std::unordered_set<int> & get_look_aheads();
     private:
-        std::unordered_set<int> look_aheads;
+        int look_aheads_index;
         int pointer, rule_index;
 };
 
