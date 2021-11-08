@@ -13,6 +13,7 @@
 #include <iostream>
 #include <sstream>
 #include <unordered_set>
+#include <set>
 #include <cwchar>
 #include <vector>
 
@@ -27,6 +28,8 @@ class Grammar{
         virtual ~Grammar();
         void get_closures(std::vector<ProductionRuleLR1*> & productions_rules_for_state);
         std::vector<ProductionRuleLR1*> get_closures_zero();
+        int get_empty_symbol();
+        size_t get_rule_number();
     private:
 
         struct left_non_terminal_info{
@@ -43,8 +46,8 @@ class Grammar{
         void calc_firsts();
         void load_rules();
         void get_reachable(int left_symbol,std::unordered_set<int> & visited);
-        void update_look_aheads(ProductionRuleLR1 * rule,std::unordered_map<int,std::unordered_set<int> > & non_terminal_to_look_aheads);
-        void dfs_get_closure(int left_symbol,std::unordered_set<int> & visited,std::vector<ProductionRuleLR1*> & closure_rules,std::unordered_map<int,std::unordered_set<int> > & non_terminal_to_look_aheads);
+        void update_look_aheads(ProductionRuleLR1 * rule,std::unordered_map<int,std::set<int> > & non_terminal_to_look_aheads);
+        void dfs_get_closure(int left_symbol,std::unordered_set<int> & visited,std::vector<ProductionRuleLR1*> & closure_rules,std::unordered_map<int,std::set<int> > & non_terminal_to_look_aheads);
 };
 
 #endif // GRAMMAR_H

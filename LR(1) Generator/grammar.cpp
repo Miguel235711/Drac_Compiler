@@ -73,7 +73,7 @@ void Grammar::load_rules(){
     }
 }
 
-void Grammar::dfs_get_closure(int left_symbol,std::unordered_set<int> & visited,std::vector<ProductionRuleLR1*> & closure_rules,std::unordered_map<int,std::unordered_set<int> > & non_terminal_to_look_aheads){
+void Grammar::dfs_get_closure(int left_symbol,std::unordered_set<int> & visited,std::vector<ProductionRuleLR1*> & closure_rules,std::unordered_map<int,std::set<int> > & non_terminal_to_look_aheads){
     ///check if visited
     if(visited.find(left_symbol)!=visited.end())
         return;
@@ -85,6 +85,8 @@ void Grammar::dfs_get_closure(int left_symbol,std::unordered_set<int> & visited,
         rule_lr1->set_look_aheads(non_terminal_to_look_aheads[left_symbol]);
         if(rule_lr1->get_right_pointer_symbol()<0)
             update_look_aheads(rule_lr1,non_terminal_to_look_aheads);
+        //if(rule_lr1->get_rule_label()==5)
+         //   std::cout << "5 got\n";
         closure_rules.push_back(rule_lr1);
     }
     for(auto child_left_symbol: to_left_non_terminal_info_things.children)
@@ -93,7 +95,7 @@ void Grammar::dfs_get_closure(int left_symbol,std::unordered_set<int> & visited,
 
 void Grammar::get_closures(std::vector<ProductionRuleLR1*> & productions_rules_for_state){ ///FIX
     //precalculate look_aheads for right_pointer_symbol
-    std::unordered_map<int,std::unordered_set<int> > non_terminal_to_look_aheads;
+    std::unordered_map<int,std::set<int> > non_terminal_to_look_aheads;
     //std::cout << "rules for closure: " << productions_rules_for_state.size() << "\n";
     for(auto production_rule_for_state: productions_rules_for_state){
         //std::cout << "get_closures::rule: " << production_rule_for_state->get_rule_label() << "\n";
@@ -126,7 +128,7 @@ void Grammar::get_closures(std::vector<ProductionRuleLR1*> & productions_rules_f
     }
 }
 
-void Grammar::update_look_aheads(ProductionRuleLR1 * rule,std::unordered_map<int,std::unordered_set<int> > & non_terminal_to_look_aheads){
+void Grammar::update_look_aheads(ProductionRuleLR1 * rule,std::unordered_map<int,std::set<int> > & non_terminal_to_look_aheads){
     auto right_symbol_to_get_look_aheads  = rule->get_right_pointer_symbol();
     auto & look_aheads = non_terminal_to_look_aheads[right_symbol_to_get_look_aheads];
     //TODO!!!!
@@ -165,4 +167,11 @@ std::vector<ProductionRuleLR1*> Grammar::get_closures_zero(){
     std::vector<ProductionRuleLR1*> closure_zero = {first_rule};
     get_closures(closure_zero);
     return closure_zero;
+}
+
+int Grammar::get_empty_symbol(){
+    return empty_symbol;
+}
+size_t Grammar::get_rule_number(){
+    return rules.size();
 }

@@ -5,10 +5,8 @@
 #include <vector>
 
 #include "production_rule_lr1.h"
+#include "op_type.h"
 
-enum OpType{
-    Reduction,GoTo,Shift
-};
 
 struct State{
     int label;

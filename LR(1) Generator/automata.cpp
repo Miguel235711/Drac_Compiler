@@ -1,16 +1,31 @@
 #include "automata.h"
 
-Automata::Automata(Grammar * grammar):grammar(grammar){
+Automata::Automata(Grammar * grammar,std::string out_file_name):grammar(grammar){
     ///init closure 0
     //std::cout << "closures zero size(): " << grammar->get_closures_zero().size() << "\n";
     //std::cout << "a:\n";
-    State * root = new State(grammar->get_closures_zero(),st_label_counter);
-    auto hashes = get_hashes(root->rules);
-    hash_trie.insert_state(hashes,root);
+    states.push_back(new State(grammar->get_closures_zero(),st_label_counter));
+    auto hashes = get_hashes(states[0]->rules);
+    hash_trie.insert_state(hashes,states[0]);
     //std::cout << "b:\n";
     //print_info(states[0]);
-    dfs(root);
-    //std::cout << "state count: " << st_label_counter << "\n";
+    dfs(states[0]);
+    std::cout << "state count: " << st_label_counter << "rules reduces: " << reduced_rules.size() << "\n";
+    std::cout << "rules not reduced:\n";
+    auto rules_number = grammar->get_rule_number();
+    for(size_t i = 0 ; i < rules_number; i ++)
+        if(reduced_rules.find(i)==reduced_rules.end())
+            std::cout << i << " ";
+    std::cout << "\n";
+    //print to file
+    std::ofstream out(out_file_name);
+    out << st_label_counter<<"\n";
+    for(auto state:states){
+        out << state->syntactical_tab_info.size() << "\n";
+        for(auto edge: state->syntactical_tab_info){
+            out << edge.first << " " << edge.second.first << " " << edge.second.second << "\n";
+        }
+    }
 }
 
 Automata::~Automata(){
@@ -25,14 +40,22 @@ void Automata::dfs(State * state){
             std::cout << "look_aheads.size(): " << production_rule->get_look_aheads().size() << "\n";
          }*/
         int rule_label = production_rule->get_rule_label();
-        if(production_rule->at_symbol())
+        /*if(production_rule->get_rule_label()==5){
+                std::cout << "weird\n";
+            }*/
+        if(production_rule->at_symbol()){
+            /*if(rule_label==5)
+                std::cout << "at symbol: " << production_rule->get_right_pointer_symbol() << "\n";*/
             productions_rules_of_each_symbol[production_rule->get_right_pointer_symbol()].push_back(production_rule);
-        else{
+        }else{
             //std::cout << "Reduction in state " << state->label << "\n";
             //reduction for all look aheads
             //std::cout << "production_rule->get_look_aheads().size(): " << production_rule->get_look_aheads().size() << "\n";
-            for(auto symbol : production_rule->get_look_aheads())
+            for(auto symbol : production_rule->get_look_aheads()){
+                reduced_rules.insert(rule_label);
+                assert(state->syntactical_tab_info.find(symbol)==state->syntactical_tab_info.end()); //conflict
                 state->syntactical_tab_info[symbol]={Reduction,rule_label};
+            }
         }
     }
     //std::cout << "productions_rules_of_each_symbol\n";
@@ -54,7 +77,7 @@ void Automata::dfs(State * state){
         //std::cout << "c:\n";
         grammar->get_closures(production_rules);
         //std::cout << "after closure.size(): " << production_rules.size() << " -> ";
-        std::vector<int> hashes = get_hashes(production_rules);
+        auto hashes = get_hashes(production_rules);
         /*std::cout << "hashes: ";
         for(auto hash: hashes){
             std::cout << hash << " ";
@@ -64,18 +87,21 @@ void Automata::dfs(State * state){
         State * next_state = hash_trie.get_state(hashes);
         if(next_state == NULL){
             next_state = new State(production_rules,st_label_counter);
+            states.push_back(next_state);
             ///add to hash_trie
             hash_trie.insert_state(hashes,next_state);
             //std::cout << "amount of production rules for state " << next_state->label << " is " << production_rules.size() << "\n";
+            //if(state->label==0)
             dfs(next_state);
         }
         //add new_state to adjacents
         auto symbol =  symbol_and_production_rules.first;
         state->adjacent[symbol]=next_state;
         //add movement
-        state->syntactical_tab_info[symbol]={symbol < 0 ? GoTo : Shift,next_state->label};
+        assert(state->syntactical_tab_info.find(symbol)==state->syntactical_tab_info.end()); //conflict
+        state->syntactical_tab_info[symbol]={symbol < 0 || symbol == grammar->get_empty_symbol() ? GoTo : Shift,next_state->label}; ///!!!Especial case for empty symbol
     }
-    print_info(state);
+    //print_info(state);
 }
 
 void Automata::print_info(State * state){

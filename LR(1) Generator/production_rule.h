@@ -24,17 +24,18 @@ class ProductionRule{
         void add_right_symbol(int symbol);
         int get_left_non_terminal();
         int get_ith_right_symbol(size_t i);
-        int get_hash();
+        //int get_hash();
         int get_rule_label();
         bool is_there_symbol_at(size_t i);
         
-        static int hash_symbol_count,hash_modulo,min_symbol_value;
-    private:
-        int rule_label,left_non_terminal;
+        static int hash_symbol_count,hash_modulo,min_symbol_value,max_symbol_value;
         
     protected:
-        int normalize_symbol_for_hash(int symbol);
+       
         std::vector<int> right_symbols;
+        int rule_label,left_non_terminal;
+
+        int normalize_symbol_for_hash(int symbol);
 };
 
 #endif // PRODUCTION_RULE_H

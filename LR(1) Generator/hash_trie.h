@@ -20,8 +20,10 @@ class HashTrie{
         struct Node{
             std::unordered_map<int,Node*> adjacent;
             State * state;
-            Node():state(NULL){}
-            Node(State * state):state(state){}
+            Node():state(NULL){/*std::cout << "hashtrie node.size(): " << adjacent.size() << "\n";*/}
+            Node(State * state):state(state){
+                
+            }
         };
 
         Node * root = new Node();

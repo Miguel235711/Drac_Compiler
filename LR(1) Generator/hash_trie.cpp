@@ -11,7 +11,7 @@ HashTrie::~HashTrie(){
 State * HashTrie::get_state(std::vector<int> & seq){
     auto node = root;
     for(auto x:seq){
-        auto adjacent = node->adjacent;
+        auto & adjacent = node->adjacent;
         auto it = adjacent.find(x);
         if(it==adjacent.end()){
             return NULL;

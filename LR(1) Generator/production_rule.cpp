@@ -24,7 +24,7 @@ int ProductionRule::get_left_non_terminal(){
     return left_non_terminal;
 }
 
-int ProductionRule::get_hash(){
+/*int ProductionRule::get_hash(){
     int x = normalize_symbol_for_hash(left_non_terminal);
     int p = hash_symbol_count;
     for(auto symbol: right_symbols){
@@ -33,7 +33,7 @@ int ProductionRule::get_hash(){
         p = (int64_t) p * hash_symbol_count % hash_modulo;
     }
     return x;
-}
+}*/
 int ProductionRule::normalize_symbol_for_hash(int symbol){
     return symbol + min_symbol_value;
 }
