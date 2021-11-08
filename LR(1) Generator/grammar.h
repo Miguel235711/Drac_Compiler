@@ -4,6 +4,7 @@
 #include "grammar.h"
 #include "production_rule.h"
 #include "production_rule_lr1.h"
+#include "rule_loader.h"
 
 
 #include <string>
@@ -39,12 +40,11 @@ class Grammar{
         };
 
         std::vector<ProductionRule *> rules; ///Ch!
-        std::string input_file_name /*= "drac grammar.txt"*/ /*"test_grammar_0.txt"*/;
         std::unordered_map<int,left_non_terminal_info> to_left_non_terminal_info;
-        int end_symbol,empty_symbol,rule_count = 0;
+        int end_symbol,empty_symbol;
 
         void calc_firsts();
-        void load_rules();
+        void load_rules(std::string in_file_name);
         void get_reachable(int left_symbol,std::unordered_set<int> & visited);
         void update_look_aheads(ProductionRuleLR1 * rule,std::unordered_map<int,std::set<int> > & non_terminal_to_look_aheads);
         void dfs_get_closure(int left_symbol,std::unordered_set<int> & visited,std::vector<ProductionRuleLR1*> & closure_rules,std::unordered_map<int,std::set<int> > & non_terminal_to_look_aheads);

@@ -2,10 +2,9 @@
 
 
 Grammar::Grammar(const std::string grammar_specification_input_file_name,int end_symbol,int empty_symbol):
-    input_file_name(grammar_specification_input_file_name)
-    ,end_symbol(end_symbol)
+    end_symbol(end_symbol)
     ,empty_symbol(empty_symbol){
-        load_rules();
+        load_rules(grammar_specification_input_file_name);
         calc_firsts();
 }
 
@@ -54,23 +53,9 @@ void Grammar::get_reachable(int left_symbol,std::unordered_set<int> & visited){
             get_reachable(child,visited);
         }
 }
-void Grammar::load_rules(){
-    std::ifstream in(input_file_name.c_str());
-    std::string line;
-    int symbol;
-    while(getline(in,line)){
-        //std::cout << "line: " << line << "\n";
-        std::stringstream line_stream(line);
-        line_stream >> symbol;
-        //std:: cout << "left non-terminal: " << symbol << "\n";
-        ProductionRule * rule = new ProductionRule(rule_count++,symbol);
-        while(line_stream >> symbol){
-            //std::cout << "right symbol: " << symbol << "\n";
-            rule->add_right_symbol(symbol);
-        }
-        //std::cout << "what: " << rule.get_first_right_symbol() << "\n";
-        rules.push_back(rule);
-    }
+void Grammar::load_rules(std::string in_file_name){
+    ///call static method of rule_loader
+    rules = RuleLoader::load_rules(in_file_name);
 }
 
 void Grammar::dfs_get_closure(int left_symbol,std::unordered_set<int> & visited,std::vector<ProductionRuleLR1*> & closure_rules,std::unordered_map<int,std::set<int> > & non_terminal_to_look_aheads){
