@@ -17,21 +17,26 @@
 #include <vector>
 #include <cassert>
 
-class ProductionRuleLR1{
+#include "production_rule.h"
+
+class ProductionRuleLR1 : public ProductionRule {
     public:
-        ProductionRuleLR1(int rule_index,int pointer,int look_aheads_index);
+
+        ProductionRuleLR1(ProductionRule * base_rule);
         virtual ~ProductionRuleLR1();
         int get_right_pointer_symbol();
-        int get_right_symbol_from_ith_rule(int pointer_offset);
-        int get_left_symbol();
-        int get_rule_index();
-        int get_hash();
-        bool is_there_symbol_at(int pointer_offset);
         void advance_pointer();
+        int get_hash();
+        bool at_symbol();
+        int get_ith_right_symbol_offset(size_t offset);
+        bool is_there_symbol_at_offset(size_t offset);
         std::unordered_set<int> & get_look_aheads();
+        void set_look_aheads(std::unordered_set<int> look_aheads);
     private:
-        int look_aheads_index;
-        int pointer, rule_index;
+
+        std::unordered_set<int> look_aheads;
+        size_t pointer=0;
+        int my_pow(int b,int e);
 };
 
 #endif // PRODUCTION_RULE_LR1_H

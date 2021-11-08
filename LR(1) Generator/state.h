@@ -1,46 +1,23 @@
-#ifndef STATE_H
-#define STATE_H
+#ifndef STATE_H 
+#define STATE_H 
 
-#include "state.h"
-#include "production_rule_lr1.h"
-#include "grammar.h"
-
-
-#include <string>
-#include <utility>
 #include <unordered_map>
-#include <fstream>
-#include <iostream>
-#include <sstream>
-#include <unordered_set>
-#include <cwchar>
 #include <vector>
 
-//testing libraries
+#include "production_rule_lr1.h"
 
-#include <vector>
-#include <cassert>
+enum OpType{
+    Reduction,GoTo,Shift
+};
 
-class State{
-    public:
-        State();
-        virtual ~State();
-        static int st_label_counter;
-        static Grammar grammar; ///change of place later!!!!
-        static std::vector<State *> states; 
-        std::vector<ProductionLR1> get_rules();
-        void add_next(int symbol, State * state);
-        void generate_graph_from_here();
-        std::vector<int> get_hashes(std::vector<ProductionLR1> & productions);
-        void set_closure_zero();  
-    private:
-        std::vector<ProductionRuleLR1> rules;
-        int st_label;
-        std::map<int,State *> next_states;
-        enum OpType{Reduction,Shift,GoTo};
-        std::map<int,std::pair<int,OpType> > with_to;
-        void dfs(State * state);
-        std::vector<ProductionRuleLR1> generate_closure(std::vector<int> sub_local_rule_inds);
+struct State{
+    int label;
+    std::unordered_map<int,State *> adjacent;
+    std::vector<ProductionRuleLR1*> rules;
+    std::unordered_map<int,std::pair<OpType,int> > syntactical_tab_info; //<symbol,<op_type,state_label or rule_index>>
+    State(std::vector<ProductionRuleLR1*>rules,int & st_label_counter):rules(rules){
+        label = st_label_counter++;
+    }
 };
 
 #endif // STATE_H

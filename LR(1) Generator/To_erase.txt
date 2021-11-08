@@ -1,0 +1,8 @@
+-Grammar:
+-Automata (previously known as State)
+-ProductionRuleLR1:
+	
+
+
+Common functions ProductionRule and ProductionRuleLR1 that need to be overriden:
+	

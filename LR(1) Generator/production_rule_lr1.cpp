@@ -1,40 +1,57 @@
 #include "production_rule_lr1.h"
 
-ProductionRuleLR1::ProductionRuleLR1(int rule_index,int pointer,int look_aheads_index):
-    rule_index(rule_index)
-    ,pointer(pointer)
-    ,look_aheads_index(look_aheads_index){
-
+ProductionRuleLR1::ProductionRuleLR1(ProductionRule * base_rule):ProductionRule(*base_rule){
+    //std::cout << "right_symbols.size(): " << right_symbols.size() << "\n";
+    /*for(auto right_symbol: right_symbols){
+        std::cout << right_symbol << " ";
+    }*/
+    //std::cout << "\n";
 }
 ProductionRuleLR1::~ProductionRuleLR1(){
 
 }
 
-//anticlimatic that State class has the instance grammar, it should be in Grammar class or a wrapper class
-int ProductionLR1::get_right_pointer_symbol(){
-    return State::grammar.get_right_symbol_from_ith_rule(pointer,rule_index);
+int ProductionRuleLR1::get_right_pointer_symbol(){
+    //std::cout << "symbol count: " << right_symbols.size() << "\n";
+    assert(at_symbol());
+    return right_symbols[pointer];
 }
-bool ProductionLR1::is_there_symbol_at(int pointer_offset){
-    return State::grammar.is_there_symbol_at(pointer+pointer_offset,rule_index);
-}
-int ProductionLR1::get_right_symbol_from_ith_rule(int pointer_offset){
-    return State::grammar.get_right_symbol_from_ith_rule(pointer+pointer_offset,rule_index);
-}
-int ProductionLR1::get_left_symbol(){
-    return State::grammar.get_left_symbol_from_ith_rule(rule_index);
-}
-void ProductionLR1::advance_pointer(){
-    assert(State::grammar.is_there_symbol_at(pointer+1));
+void ProductionRuleLR1::advance_pointer(){
     pointer++;
 }
 
-std::unordered_set<int> & get_look_aheads(){
-    return Grammar::look_aheads[rule_index];
+std::unordered_set<int> & ProductionRuleLR1::get_look_aheads(){
+    return look_aheads;
 }
 
-int ProductionLR1::get_rule_index(){
-    return rule_index;
+bool ProductionRuleLR1::at_symbol(){
+    return pointer < right_symbols.size();
 }
-int ProductionLR1::get_hash(){
-    return State::grammar.get_ith_production_rule(rule_index).get_hash();
+int ProductionRuleLR1::get_hash(){
+   int hash = ProductionRule::get_hash();
+   int p = my_pow(hash_symbol_count,right_symbols.size()+1);
+   for(auto symbol: look_aheads){
+        hash += (int64_t) p * normalize_symbol_for_hash(symbol) % hash_modulo;
+        hash %= hash_modulo;
+        p = (int64_t) p * hash_symbol_count % hash_modulo;
+    }
+    return hash;
+}
+int ProductionRuleLR1::my_pow(int b,int e){
+    if(!e)
+        return 1;
+    int x = my_pow(b,e>>1);
+    return  (int64_t) ( (int64_t) x * x % hash_modulo ) * (e&1 ? b : 1) % hash_modulo;
+}
+
+void ProductionRuleLR1::set_look_aheads(std::unordered_set<int> look_aheads){
+    this->look_aheads=look_aheads;
+}
+
+int ProductionRuleLR1::get_ith_right_symbol_offset(size_t offset){
+    return get_ith_right_symbol(pointer+offset);
+}
+bool ProductionRuleLR1::is_there_symbol_at_offset(size_t offset){
+    //std::cout << "left_symbol: " << get_left_non_terminal() << "pointer: " << pointer << " offset: " << offset << "\n";
+    return is_there_symbol_at(pointer+offset);
 }
