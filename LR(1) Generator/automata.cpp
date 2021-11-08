@@ -21,9 +21,9 @@ void Automata::dfs(State * state){
     //std::cout << "label: " << state->label << "\n";
     std::unordered_map<int,std::vector<ProductionRuleLR1*> > productions_rules_of_each_symbol;
     for(auto production_rule : state->rules){
-        if(state->label==0){
+        /*if(state->label==0){
             std::cout << "look_aheads.size(): " << production_rule->get_look_aheads().size() << "\n";
-         }
+         }*/
         int rule_label = production_rule->get_rule_label();
         if(production_rule->at_symbol())
             productions_rules_of_each_symbol[production_rule->get_right_pointer_symbol()].push_back(production_rule);
