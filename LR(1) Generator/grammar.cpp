@@ -157,6 +157,9 @@ std::vector<ProductionRuleLR1*> Grammar::get_closures_zero(){
 int Grammar::get_empty_symbol(){
     return empty_symbol;
 }
+int Grammar::get_end_symbol(){
+    return end_symbol;
+}
 size_t Grammar::get_rule_number(){
     return rules.size();
 }

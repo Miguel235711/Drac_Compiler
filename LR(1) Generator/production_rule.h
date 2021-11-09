@@ -23,11 +23,10 @@ class ProductionRule{
         virtual ~ProductionRule();
         void add_right_symbol(int symbol);
         int get_left_non_terminal();
-        int get_ith_right_symbol(size_t i);
+        int get_ith_right_symbol(int i); ///manage -1
         //int get_hash();
         int get_rule_label();
-        bool is_there_symbol_at(size_t i);
-        
+        bool is_there_symbol_at(int i);///manage -1
         static int hash_symbol_count,hash_modulo,min_symbol_value,max_symbol_value;
         
     protected:
@@ -36,6 +35,9 @@ class ProductionRule{
         int rule_label,left_non_terminal;
 
         int normalize_symbol_for_hash(int symbol);
+    private:
+
+        int extended_index_to_simple(int i);
 };
 
 #endif // PRODUCTION_RULE_H

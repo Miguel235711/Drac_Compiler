@@ -99,8 +99,10 @@ void Automata::dfs(State * state){
         state->adjacent[symbol]=next_state;
         //add movement
         assert(state->syntactical_tab_info.find(symbol)==state->syntactical_tab_info.end()); //conflict
-        state->syntactical_tab_info[symbol]={symbol < 0 || symbol == grammar->get_empty_symbol() ? GoTo : Shift,next_state->label}; ///!!!Especial case for empty symbol
+        state->syntactical_tab_info[symbol]={symbol < 0 || grammar->get_empty_symbol()==symbol  ? GoTo : Shift,next_state->label}; ///!!!Especial case for empty symbol and end_symbol
     }
+   //if(state->label == 1)
+    //    symbol == grammar->get_end_symbol() && state->label == 1 ? Acceptance :
     //print_info(state);
 }
 

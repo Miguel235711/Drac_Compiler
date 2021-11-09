@@ -6,9 +6,13 @@
 #include <functional>
 
 #include "lexical_analyzer.h"
+#include "syntactical_analyzer.h"
+#include "syntactical_automata.h"
 
 bool testing = false;
 auto cases_path_c_str = std::string("./cases/").c_str();
+int SyntacticalAutomata::end_symbol = 40, SyntacticalAutomata::empty_symbol = 41;
+int ProductionRule::hash_symbol_count = 89 , ProductionRule::hash_modulo = 1000000123,ProductionRule::min_symbol_value = 44, ProductionRule::max_symbol_value = 41;//too repetitive
 
 int main(int argc,char ** argv){
     LexicalAnalyzer lexical_analyzer;
@@ -60,6 +64,8 @@ int main(int argc,char ** argv){
             return EXIT_FAILURE;
         }
     }
+    //init syntatical analyzer
+    SyntacticalAnalyzer syntactical_analyzer("./LR(1)_info.txt","./LR(1) Generator/drac grammar.txt");
     for(auto file_name: filenames){
         std::vector<std::pair<int,std::string> > tokens;
         if(!lexical_analyzer.get_tokens(file_name,tokens)){
@@ -69,6 +75,10 @@ int main(int argc,char ** argv){
         f_out(file_name+"\n");
         for(auto token: tokens)
             f_out("label: "+std::to_string(token.first)+" content: "+token.second+"\n");
+        ///
+        //add 
+        tokens.push_back({SyntacticalAutomata::end_symbol,""}); // special symbol for syntactical analysis
+        f_out(syntactical_analyzer.is_correct(tokens) ? "Correct syntaxis" : "Inorrect syntaxis");
     }
     out.close();
     return 0;

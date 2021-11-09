@@ -30,6 +30,7 @@ class Grammar{
         void get_closures(std::vector<ProductionRuleLR1*> & productions_rules_for_state);
         std::vector<ProductionRuleLR1*> get_closures_zero();
         int get_empty_symbol();
+        int get_end_symbol();
         size_t get_rule_number();
     private:
 

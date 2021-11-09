@@ -15,9 +15,11 @@ void ProductionRule::add_right_symbol(int symbol){
     //std::cout << "\n";   
 }
 
-int ProductionRule::get_ith_right_symbol(size_t i){
+int ProductionRule::get_ith_right_symbol(int i){
     assert(is_there_symbol_at(i));
-    return right_symbols[i];
+    /*if(rule_label==2)
+        std::cout << "get_ith_right_symbol: " << left_non_terminal << " " << right_symbols[0] << "\n";*/
+    return right_symbols[extended_index_to_simple(i)];
 }
 
 int ProductionRule::get_left_non_terminal(){
@@ -41,6 +43,10 @@ int ProductionRule::normalize_symbol_for_hash(int symbol){
 int ProductionRule::get_rule_label(){
     return rule_label;
 }
-bool ProductionRule::is_there_symbol_at(size_t i){
-    return i < right_symbols.size();
+bool ProductionRule::is_there_symbol_at(int i){
+    auto n_i = extended_index_to_simple(i);
+    return -1 < n_i && n_i < right_symbols.size();
+}
+int ProductionRule::extended_index_to_simple(int i){
+    return i +( i < 0 ?  right_symbols.size() : 0);
 }
