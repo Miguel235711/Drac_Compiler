@@ -8,7 +8,7 @@ HashTrie::~HashTrie(){
 
 }
 
-State * HashTrie::get_state(std::vector<int> & seq){
+State * HashTrie::get_state(std::vector<std::pair<int,int> > & seq){
     auto node = root;
     for(auto x:seq){
         auto & adjacent = node->adjacent;
@@ -21,7 +21,7 @@ State * HashTrie::get_state(std::vector<int> & seq){
     //std::cout << "not null? " <<  (node->state!=NULL);
     return node->state;
 }
-void HashTrie::insert_state(std::vector<int> & seq,State * state){
+void HashTrie::insert_state(std::vector<std::pair<int,int> > & seq,State * state){
     auto node = root;
     for(auto x:seq){
         auto & adjacent = node->adjacent;

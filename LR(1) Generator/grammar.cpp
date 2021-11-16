@@ -17,16 +17,20 @@ void Grammar::calc_firsts(){
     //TODO
     ///calculate children and direct firsts
     for(auto rule : rules){
-        int first_right_symbol = rule->get_ith_right_symbol(0), left_non_terminal = rule->get_left_non_terminal();
-        //std::cout << "rule " << i << " first_right_symbol: " << first_right_symbol << " left_non_terminal: " << left_non_terminal << "\n";
-        //auto info_it = to_left_non_terminal_info.find(left_non_terminal);
-        //if(info_it == to_left_non_terminal_info.end())
-        //    info_it = to_left_non_terminal_info.insert({left_non_terminal,left_non_terminal_info()}).first;
+        int left_non_terminal = rule->get_left_non_terminal();
         auto & info = to_left_non_terminal_info[left_non_terminal];
-        auto & which_set = first_right_symbol < 0 ? info.children : info.firsts;
         info.rules.push_back(rule);
-        which_set.insert(first_right_symbol);
+        if(rule->is_there_symbol_at(0)){
+            int first_right_symbol = rule->get_ith_right_symbol(0) ;
+            //std::cout << "rule " << i << " first_right_symbol: " << first_right_symbol << " left_non_terminal: " << left_non_terminal << "\n";
+            //auto info_it = to_left_non_terminal_info.find(left_non_terminal);
+            //if(info_it == to_left_non_terminal_info.end())
+            //    info_it = to_left_non_terminal_info.insert({left_non_terminal,left_non_terminal_info()}).first;
+            auto & which_set = first_right_symbol < 0 ? info.children : info.firsts;
+            which_set.insert(first_right_symbol);
+        }
     }
+    //std::cout << "completed\n";
     //DO one DFS per number to calculate reachable -> O(n^3) try to optimize later
     for(auto & left_symbol_info: to_left_non_terminal_info){
         auto left_symbol = left_symbol_info.first;
@@ -66,9 +70,10 @@ void Grammar::dfs_get_closure(int left_symbol,std::unordered_set<int> & visited,
     ///add rules belonging to this symbol
     auto & to_left_non_terminal_info_things = to_left_non_terminal_info[left_symbol];
     for(auto rule : to_left_non_terminal_info_things.rules){
+        //std::cout << "left symbol: " << left_symbol << "\n";
         ProductionRuleLR1 * rule_lr1 =  new ProductionRuleLR1(rule);
         rule_lr1->set_look_aheads(non_terminal_to_look_aheads[left_symbol]);
-        if(rule_lr1->get_right_pointer_symbol()<0)
+        if(rule_lr1->at_symbol()&&rule_lr1->get_right_pointer_symbol()<0)
             update_look_aheads(rule_lr1,non_terminal_to_look_aheads);
         //if(rule_lr1->get_rule_label()==5)
          //   std::cout << "5 got\n";
@@ -108,7 +113,7 @@ void Grammar::get_closures(std::vector<ProductionRuleLR1*> & productions_rules_f
     std::unordered_set<int> visited;
     int sz = productions_rules_for_state.size();
     for(int i = 0 ; i < sz ; i ++){
-        if(productions_rules_for_state[i]->at_symbol())
+        if(productions_rules_for_state[i]->at_symbol()&&productions_rules_for_state[i]->get_right_pointer_symbol()<0)
             dfs_get_closure(productions_rules_for_state[i]->get_right_pointer_symbol(),visited,productions_rules_for_state,non_terminal_to_look_aheads);
     }
 }

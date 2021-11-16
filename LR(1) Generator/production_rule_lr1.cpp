@@ -27,8 +27,11 @@ std::set<int> & ProductionRuleLR1::get_look_aheads(){
 bool ProductionRuleLR1::at_symbol(){
     return pointer < right_symbols.size();
 }
-int ProductionRuleLR1::get_hash(){
-    int hash = normalize_symbol_for_hash(left_non_terminal), p = hash_symbol_count, i = 0 ;
+std::pair<int,int> ProductionRuleLR1::get_hash(){
+    int initial = normalize_symbol_for_hash(left_non_terminal);
+    std::pair<int,int> hash = {initial,initial};
+    std::pair<int,int> p = {hash_symbol_count,hash_symbol_count};
+    int  i = 0 ;
     for(auto symbol: right_symbols){
         handle_update_hash_for_pointer(hash,p,i);
         update_hash(hash,symbol,p);
@@ -43,20 +46,22 @@ int ProductionRuleLR1::get_hash(){
     return hash;
 }
 
-void ProductionRuleLR1::update_hash(int & hash,int symbol,int & p){
-    hash += (int64_t) p * normalize_symbol_for_hash(symbol) % hash_modulo;
-    hash %= hash_modulo;
+void ProductionRuleLR1::update_hash(std::pair<int,int> & hash,int symbol,std::pair<int,int> & p){
+    hash.first += (int64_t) p.first * normalize_symbol_for_hash(symbol) % hash_modulo_1;
+    hash.first %= hash_modulo_1;
+    hash.second += (int64_t) p.second * normalize_symbol_for_hash(symbol) % hash_modulo_2;
+    hash.second %= hash_modulo_2;
     p = get_next_p(p);
 }
-void ProductionRuleLR1::handle_update_hash_for_pointer(int & hash,int p,int i){
+void ProductionRuleLR1::handle_update_hash_for_pointer(std::pair<int,int> & hash,std::pair<int,int> & p,int i){
     if(i==pointer){
         update_hash(hash,max_symbol_value+1,p);
         p = get_next_p(p);
     }
 }
 
-int ProductionRuleLR1::get_next_p(int p){
-    return (int64_t) p * hash_symbol_count % hash_modulo;
+std::pair<int,int> ProductionRuleLR1::get_next_p(std::pair<int,int> p){
+    return {(int64_t) p.first * hash_symbol_count % hash_modulo_1,(int64_t) p.second * hash_symbol_count % hash_modulo_2}; 
 }
 /*int ProductionRuleLR1::my_pow(int b,int e){
     if(!e)

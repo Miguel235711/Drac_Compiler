@@ -35,7 +35,7 @@ class Automata{
         Grammar * grammar;
         std::unordered_set<int> reduced_rules;
         void dfs(State * state);
-        std::vector<int> get_hashes(std::vector<ProductionRuleLR1*> & productions);
+        std::vector<std::pair<int,int> > get_hashes(std::vector<ProductionRuleLR1*> & productions);
         void print_info(State * state);
 };
 

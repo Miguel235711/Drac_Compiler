@@ -26,7 +26,7 @@ class ProductionRuleLR1 : public ProductionRule {
         virtual ~ProductionRuleLR1();
         int get_right_pointer_symbol();
         void advance_pointer();
-        int get_hash();
+        std::pair<int,int> get_hash();
         bool at_symbol();
         int get_ith_right_symbol_offset(size_t offset);
         bool is_there_symbol_at_offset(size_t offset);
@@ -37,9 +37,9 @@ class ProductionRuleLR1 : public ProductionRule {
         std::set<int> look_aheads;
         size_t pointer=0;
 
-        int get_next_p(int p);
-        void update_hash(int & hash,int symbol,int & p);
-        void handle_update_hash_for_pointer(int & hash,int p,int i);
+        std::pair<int,int> get_next_p(std::pair<int,int> p);
+        void update_hash(std::pair<int,int> & hash,int symbol,std::pair<int,int> & p);
+        void handle_update_hash_for_pointer(std::pair<int,int> & hash,std::pair<int,int> & p,int i);
        //int my_pow(int b,int e);
 };
 

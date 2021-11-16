@@ -7,7 +7,6 @@
 11 if
 12 do
 13 inc
-14 var
 15 elif
 16 not
 17 while

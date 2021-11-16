@@ -3,7 +3,7 @@
 
 #include "state.h"
 
-#include <unordered_map>
+#include <map>
 #include <vector>
 
 
@@ -12,13 +12,13 @@ class HashTrie{
         
         HashTrie();
         virtual ~HashTrie();
-        State * get_state(std::vector<int> & seq);
-        void insert_state(std::vector<int> & seq,State * state);
+        State * get_state(std::vector<std::pair<int,int> > & seq);
+        void insert_state(std::vector<std::pair<int,int> > & seq,State * state);
 
     private:
         
         struct Node{
-            std::unordered_map<int,Node*> adjacent;
+            std::map<std::pair<int,int>,Node*> adjacent;
             State * state;
             Node():state(NULL){/*std::cout << "hashtrie node.size(): " << adjacent.size() << "\n";*/}
             Node(State * state):state(state){

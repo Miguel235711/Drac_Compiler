@@ -114,8 +114,8 @@ void Automata::print_info(State * state){
     }
 }
 
-std::vector<int> Automata::get_hashes(std::vector<ProductionRuleLR1*> & productions){
-    std::vector<int> hashes;
+std::vector<std::pair<int,int> > Automata::get_hashes(std::vector<ProductionRuleLR1*> & productions){
+    std::vector<std::pair<int,int> > hashes;
     for(auto production : productions)
         hashes.push_back(production->get_hash());
     ///sort

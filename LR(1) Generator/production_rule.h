@@ -27,7 +27,7 @@ class ProductionRule{
         //int get_hash();
         int get_rule_label();
         bool is_there_symbol_at(int i);///manage -1
-        static int hash_symbol_count,hash_modulo,min_symbol_value,max_symbol_value;
+        static int hash_symbol_count,hash_modulo_1,hash_modulo_2,min_symbol_value,max_symbol_value;
         
     protected:
        
